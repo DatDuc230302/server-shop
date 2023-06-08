@@ -113,3 +113,31 @@ export const sortHighestCateAndQuery = async (req, res, next) => {
         .sort({ price: -1 });
     res.json(result);
 };
+
+export const sortBetweenPrice = async (req, res, next) => {
+    const result = await products.find({
+        $and: [
+            { price: { $gt: req.body.priceMin, $lt: req.body.priceMax } },
+            { name: { $regex: req.body.key, $options: 'i' } },
+        ],
+    });
+    res.json(result);
+};
+
+export const sortBetweenPriceCate = async (req, res, next) => {
+    const result = await products.find({
+        $and: [{ price: { $gt: req.body.priceMin, $lt: req.body.priceMax } }, { category: req.body.category }],
+    });
+    res.json(result);
+};
+
+export const sortBetweenPriceCateAndQuery = async (req, res, next) => {
+    const result = await products.find({
+        $and: [
+            { price: { $gt: req.body.priceMin, $lt: req.body.priceMax } },
+            { category: req.body.category },
+            { name: { $regex: req.body.key, $options: 'i' } },
+        ],
+    });
+    res.json(result);
+};
