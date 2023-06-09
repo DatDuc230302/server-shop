@@ -12,6 +12,11 @@ export const addProducts = async (req, res, next) => {
     res.json({ status: true });
 };
 
+export const findId = async (req, res, next) => {
+    const result = await products.find({ _id: req.body.id });
+    res.json(result);
+};
+
 export const findName = async (req, res, next) => {
     const result = await products.find({
         $or: [{ name: { $regex: req.body.key, $options: 'i' } }],
