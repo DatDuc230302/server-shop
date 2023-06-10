@@ -38,6 +38,16 @@ export const findNameCateAndQuery = async (req, res, next) => {
     res.json(result);
 };
 
+export const findAllById = async (req, res, next) => {
+    const result = [];
+    const arrId = req.body.arrId;
+    for (const item of arrId) {
+        const foundItem = await products.findOne({ _id: item });
+        result.push(foundItem);
+    }
+    res.json(result);
+};
+
 export const sortDate = async (req, res, next) => {
     const result = await products
         .find({
