@@ -13,3 +13,13 @@ const schema = new mongoose.Schema(
 );
 
 export const users = mongoose.model('users', schema);
+
+const avatars = new mongoose.Schema(
+    {
+        id: Number,
+        url: String,
+    },
+    { timestamps: true },
+);
+
+export const usersAvatars = mongoose.model('usersAvatars', avatars);
