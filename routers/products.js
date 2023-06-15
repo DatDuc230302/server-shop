@@ -19,6 +19,7 @@ import {
     sortBetweenPriceCateAndQuery,
     findId,
     findAllById,
+    getSelling,
 } from '../controllers/productsController.js';
 
 const productsRouter = express.Router();
@@ -42,5 +43,6 @@ productsRouter.post('/products/sortHighestCateAndQuery', sortHighestCateAndQuery
 productsRouter.post('/products/sortBetweenPrice', sortBetweenPrice);
 productsRouter.post('/products/sortBetweenPriceCate', sortBetweenPriceCate);
 productsRouter.post('/products/sortBetweenPriceCateAndQuery', sortBetweenPriceCateAndQuery);
+productsRouter.get('/products/getSelling', getSelling);
 
 export default productsRouter;

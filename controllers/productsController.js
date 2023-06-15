@@ -156,3 +156,8 @@ export const sortBetweenPriceCateAndQuery = async (req, res, next) => {
     });
     res.json(result);
 };
+
+export const getSelling = async (req, res, next) => {
+    const result = await products.find({}, 'name price discount priceDiscount img sold').sort({ sold: -1 }).limit(4);
+    res.json(result);
+};
