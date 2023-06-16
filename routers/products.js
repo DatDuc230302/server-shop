@@ -20,6 +20,10 @@ import {
     findId,
     findAllById,
     getSelling,
+
+    // PopularSearch
+    getPopularSearch,
+    addPopularSearch,
 } from '../controllers/productsController.js';
 
 const productsRouter = express.Router();
@@ -44,5 +48,9 @@ productsRouter.post('/products/sortBetweenPrice', sortBetweenPrice);
 productsRouter.post('/products/sortBetweenPriceCate', sortBetweenPriceCate);
 productsRouter.post('/products/sortBetweenPriceCateAndQuery', sortBetweenPriceCateAndQuery);
 productsRouter.get('/products/getSelling', getSelling);
+
+// PopularSearches
+productsRouter.get('/products/popularSearch/get', getPopularSearch);
+productsRouter.post('/products/popularSearch/add', addPopularSearch);
 
 export default productsRouter;

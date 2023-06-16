@@ -1,4 +1,4 @@
-import { products } from '../models/productsModel.js';
+import { popularSearch, products } from '../models/productsModel.js';
 
 export const getProducts = async (req, res, next) => {
     const data = await products.find();
@@ -160,4 +160,17 @@ export const sortBetweenPriceCateAndQuery = async (req, res, next) => {
 export const getSelling = async (req, res, next) => {
     const result = await products.find({}, 'name price discount priceDiscount img sold').sort({ sold: -1 }).limit(4);
     res.json(result);
+};
+
+// popularSearches
+
+export const getPopularSearch = async (req, res, next) => {
+    const result = await popularSearch.find().sort({ quantity: -1 }).limit(6);
+    res.json(result);
+};
+
+export const addPopularSearch = async (req, res, next) => {
+    const body = req.body;
+    await popularSearch.findOneAndUpdate({ name: body.name }, { $inc: { quantity: 1 } }, { upsert: true, new: true });
+    res.json();
 };
