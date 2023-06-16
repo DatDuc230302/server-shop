@@ -162,6 +162,21 @@ export const getSelling = async (req, res, next) => {
     res.json(result);
 };
 
+export const getTrending = async (req, res, next) => {
+    const result = await products
+        .find({}, '_id name price title discount priceDiscount img views')
+        .sort({ views: -1 })
+        .limit(6);
+    res.json(result);
+};
+
+export const findAndUpdateViews = async (req, res, next) => {
+    const body = req.body;
+    await products.findOneAndUpdate({ _id: body.id }, { $inc: { views: 1 } }, { upsert: true, new: true });
+    const result = await products.find({ _id: body.id });
+    res.json(result);
+};
+
 // popularSearches
 
 export const getPopularSearch = async (req, res, next) => {

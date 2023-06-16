@@ -20,6 +20,8 @@ import {
     findId,
     findAllById,
     getSelling,
+    getTrending,
+    findAndUpdateViews,
 
     // PopularSearch
     getPopularSearch,
@@ -48,6 +50,8 @@ productsRouter.post('/products/sortBetweenPrice', sortBetweenPrice);
 productsRouter.post('/products/sortBetweenPriceCate', sortBetweenPriceCate);
 productsRouter.post('/products/sortBetweenPriceCateAndQuery', sortBetweenPriceCateAndQuery);
 productsRouter.get('/products/getSelling', getSelling);
+productsRouter.get('/products/getTrending', getTrending);
+productsRouter.post('/products/findAndUpdateViews', findAndUpdateViews);
 
 // PopularSearches
 productsRouter.get('/products/popularSearch/get', getPopularSearch);
