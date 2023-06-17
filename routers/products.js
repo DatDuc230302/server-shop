@@ -22,6 +22,7 @@ import {
     getSelling,
     getTrending,
     findAndUpdateViews,
+    findBestCate,
 
     // PopularSearch
     getPopularSearch,
@@ -49,9 +50,10 @@ productsRouter.post('/products/sortHighestCateAndQuery', sortHighestCateAndQuery
 productsRouter.post('/products/sortBetweenPrice', sortBetweenPrice);
 productsRouter.post('/products/sortBetweenPriceCate', sortBetweenPriceCate);
 productsRouter.post('/products/sortBetweenPriceCateAndQuery', sortBetweenPriceCateAndQuery);
-productsRouter.get('/products/getSelling', getSelling);
+productsRouter.post('/products/getSelling', getSelling);
 productsRouter.get('/products/getTrending', getTrending);
 productsRouter.post('/products/findAndUpdateViews', findAndUpdateViews);
+productsRouter.post('/products/findBestCate', findBestCate);
 
 // PopularSearches
 productsRouter.get('/products/popularSearch/get', getPopularSearch);

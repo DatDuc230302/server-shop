@@ -158,7 +158,11 @@ export const sortBetweenPriceCateAndQuery = async (req, res, next) => {
 };
 
 export const getSelling = async (req, res, next) => {
-    const result = await products.find({}, 'name price discount priceDiscount img sold').sort({ sold: -1 }).limit(4);
+    const body = req.body;
+    const result = await products
+        .find({}, 'name price discount priceDiscount img sold')
+        .sort({ sold: -1 })
+        .limit(body.quantity);
     res.json(result);
 };
 
@@ -166,7 +170,7 @@ export const getTrending = async (req, res, next) => {
     const result = await products
         .find({}, '_id name price title discount priceDiscount img views')
         .sort({ views: -1 })
-        .limit(6);
+        .limit(12);
     res.json(result);
 };
 
@@ -174,6 +178,12 @@ export const findAndUpdateViews = async (req, res, next) => {
     const body = req.body;
     await products.findOneAndUpdate({ _id: body.id }, { $inc: { views: 1 } }, { upsert: true, new: true });
     const result = await products.find({ _id: body.id });
+    res.json(result);
+};
+
+export const findBestCate = async (req, res, next) => {
+    const body = req.body;
+    const result = await products.find({ category: body.category }).sort({ sold: -1 }).limit(body.quantity);
     res.json(result);
 };
 
