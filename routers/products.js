@@ -23,6 +23,7 @@ import {
     getTrending,
     findAndUpdateViews,
     findBestCate,
+    findSoldCate,
 
     // PopularSearch
     getPopularSearch,
@@ -54,6 +55,7 @@ productsRouter.post('/products/getSelling', getSelling);
 productsRouter.get('/products/getTrending', getTrending);
 productsRouter.post('/products/findAndUpdateViews', findAndUpdateViews);
 productsRouter.post('/products/findBestCate', findBestCate);
+productsRouter.post('/products/findSoldCate', findSoldCate);
 
 // PopularSearches
 productsRouter.get('/products/popularSearch/get', getPopularSearch);

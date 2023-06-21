@@ -187,6 +187,14 @@ export const findBestCate = async (req, res, next) => {
     res.json(result);
 };
 
+export const findSoldCate = async (req, res, next) => {
+    const body = req.body;
+    const result = await products
+        .find({ category: body.category }, '_id name price title discount priceDiscount img views')
+        .sort({ sold: -1 });
+    res.json(result);
+};
+
 // popularSearches
 
 export const getPopularSearch = async (req, res, next) => {
