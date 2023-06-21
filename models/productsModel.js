@@ -12,6 +12,7 @@ const schema = new mongoose.Schema(
         img: String,
         sold: Number,
         views: Number,
+        note: String,
     },
     { timestamps: true },
 );

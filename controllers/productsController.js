@@ -195,6 +195,12 @@ export const findSoldCate = async (req, res, next) => {
     res.json(result);
 };
 
+export const findNote = async (req, res, next) => {
+    const body = req.body;
+    const result = await products.find({ note: body.note }, '_id name price title discount priceDiscount img views');
+    res.json(result);
+};
+
 // popularSearches
 
 export const getPopularSearch = async (req, res, next) => {
