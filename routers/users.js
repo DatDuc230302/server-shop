@@ -3,7 +3,7 @@ import {
     addCarts,
     addUsers,
     deleteCarts,
-    findIdUsers,
+    queryId,
     getAvatars,
     getUsers,
     updateAvatar,
@@ -14,7 +14,7 @@ const usersRouter = express.Router();
 
 usersRouter.get('/users/get', getUsers);
 usersRouter.post('/users/add', addUsers);
-usersRouter.post('/users/findId', findIdUsers);
+usersRouter.get('/users/queryId', queryId);
 usersRouter.post('/users/addCarts', addCarts);
 usersRouter.post('/users/updateCarts', updateCarts);
 usersRouter.post('/users/deleteCarts', deleteCarts);

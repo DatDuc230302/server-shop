@@ -1,8 +1,17 @@
 import { popularSearch, products } from '../models/productsModel.js';
 
 export const getProducts = async (req, res, next) => {
-    const data = await products.find();
-    res.json(data);
+    const pageSize = req.query.pageSize;
+    const pageNum = req.query.pageNum;
+    const skipAmount = pageSize * (pageNum - 1);
+    const data = await products.find().skip(skipAmount).limit(pageSize);
+    const totalProducts = await products.countDocuments();
+    // Lấy dữ liệu phân trang
+
+    res.json({
+        totalProducts: totalProducts,
+        data: data,
+    });
 };
 
 export const addProducts = async (req, res, next) => {
@@ -12,29 +21,34 @@ export const addProducts = async (req, res, next) => {
     res.json({ status: true });
 };
 
-export const findId = async (req, res, next) => {
-    const result = await products.find({ _id: req.body.id });
+// Query
+export const queryName = async (req, res, next) => {
+    const name = req.query.query;
+    const result = await products.find({
+        $or: [{ name: { $regex: name, $options: 'i' } }],
+    });
     res.json(result);
 };
-
-export const findName = async (req, res, next) => {
+export const queryCate = async (req, res, next) => {
+    const category = req.query.category;
     const result = await products.find({
-        $or: [{ name: { $regex: req.body.key, $options: 'i' } }],
+        $or: [{ category: { $regex: category, $options: 'i' } }],
+    });
+    res.json(result);
+};
+export const queryNameCate = async (req, res, next) => {
+    const name = req.query.name;
+    const category = req.query.category;
+    const result = await products.find({
+        $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
     });
     res.json(result);
 };
 
-export const findNameCate = async (req, res, next) => {
-    const result = await products.find({
-        $or: [{ category: { $regex: req.body.category, $options: 'i' } }],
-    });
-    res.json(result);
-};
-
-export const findNameCateAndQuery = async (req, res, next) => {
-    const result = await products.find({
-        $and: [{ category: req.body.category }, { name: { $regex: req.body.key, $options: 'i' } }],
-    });
+// Query
+export const queryId = async (req, res, next) => {
+    const id = req.query.id;
+    const result = await products.find({ _id: id });
     res.json(result);
 };
 
@@ -48,129 +62,144 @@ export const findAllById = async (req, res, next) => {
     res.json(result);
 };
 
-export const sortDate = async (req, res, next) => {
+// Sort Date
+export const sortDateName = async (req, res, next) => {
+    const name = req.query.name;
     const result = await products
         .find({
-            $or: [{ name: { $regex: req.body.key, $options: 'i' } }],
+            $or: [{ name: { $regex: name, $options: 'i' } }],
         })
-        .sort({ createdAt: -1 });
-    res.json(result);
+        .sort({ createdAt: -1 })
+        .res.json(result);
 };
-
 export const sortDateCate = async (req, res, next) => {
+    const category = req.query.category;
     const result = await products
         .find({
-            $or: [{ category: { $regex: req.body.category, $options: 'i' } }],
+            $or: [{ category: { $regex: category, $options: 'i' } }],
+        })
+        .sort({ createdAt: -1 });
+    res.json(result);
+};
+export const sortDateNameCate = async (req, res, next) => {
+    const name = req.query.name;
+    const category = req.query.category;
+    const result = await products
+        .find({
+            $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
         })
         .sort({ createdAt: -1 });
     res.json(result);
 };
 
-export const sortDateCateAndQuery = async (req, res, next) => {
+// Sort Price Lowest
+export const sortLowestName = async (req, res, next) => {
+    const name = req.query.name;
     const result = await products
         .find({
-            $and: [{ category: req.body.category }, { name: { $regex: req.body.key, $options: 'i' } }],
-        })
-        .sort({ createdAt: -1 });
-    res.json(result);
-};
-
-export const sortLowest = async (req, res, next) => {
-    const result = await products
-        .find({
-            $or: [{ name: { $regex: req.body.key, $options: 'i' } }],
+            $or: [{ name: { $regex: name, $options: 'i' } }],
         })
         .sort({ price: 1 });
     res.json(result);
 };
-
 export const sortLowestCate = async (req, res, next) => {
+    const category = req.query.category;
     const result = await products
         .find({
-            $or: [{ category: { $regex: req.body.category, $options: 'i' } }],
+            $or: [{ category: { $regex: category, $options: 'i' } }],
+        })
+        .sort({ price: 1 });
+    res.json(result);
+};
+export const sortLowestNameCate = async (req, res, next) => {
+    const name = req.query.name;
+    const category = req.query.category;
+    const result = await products
+        .find({
+            $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
         })
         .sort({ price: 1 });
     res.json(result);
 };
 
-export const sortLowestCateAndQuery = async (req, res, next) => {
+// Sort Price Highest
+export const sortHighestName = async (req, res, next) => {
+    const name = req.query.name;
     const result = await products
         .find({
-            $and: [{ category: req.body.category }, { name: { $regex: req.body.key, $options: 'i' } }],
-        })
-        .sort({ price: 1 });
-    res.json(result);
-};
-
-export const sortHighest = async (req, res, next) => {
-    const result = await products
-        .find({
-            $or: [{ name: { $regex: req.body.key, $options: 'i' } }],
+            $or: [{ name: { $regex: name, $options: 'i' } }],
         })
         .sort({ price: -1 });
     res.json(result);
 };
-
 export const sortHighestCate = async (req, res, next) => {
+    const category = req.query.categor;
     const result = await products
         .find({
-            $or: [{ category: { $regex: req.body.category, $options: 'i' } }],
+            $or: [{ category: { $regex: category, $options: 'i' } }],
+        })
+        .sort({ price: -1 });
+    res.json(result);
+};
+export const sortHighestNameCate = async (req, res, next) => {
+    const name = req.query.name;
+    const category = req.query.category;
+    const result = await products
+        .find({
+            $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
         })
         .sort({ price: -1 });
     res.json(result);
 };
 
-export const sortHighestCateAndQuery = async (req, res, next) => {
-    const result = await products
-        .find({
-            $and: [{ category: req.body.category }, { name: { $regex: req.body.key, $options: 'i' } }],
-        })
-        .sort({ price: -1 });
-    res.json(result);
-};
-
-export const sortBetweenPrice = async (req, res, next) => {
+// Sort Price Between
+export const sortBetweenPriceName = async (req, res, next) => {
+    const name = req.query.name;
+    const priceMin = req.query.priceMin;
+    const priceMax = req.query.priceMax;
     const result = await products.find({
-        $and: [
-            { price: { $gt: req.body.priceMin, $lt: req.body.priceMax } },
-            { name: { $regex: req.body.key, $options: 'i' } },
-        ],
+        $and: [{ name: { $regex: name, $options: 'i' } }, { price: { $gt: priceMin, $lt: priceMax } }],
     });
     res.json(result);
 };
-
 export const sortBetweenPriceCate = async (req, res, next) => {
+    const category = req.query.category;
+    const priceMin = req.query.priceMin;
+    const priceMax = req.query.priceMax;
     const result = await products.find({
-        $and: [{ price: { $gt: req.body.priceMin, $lt: req.body.priceMax } }, { category: req.body.category }],
+        $and: [{ category: category }, { price: { $gt: priceMin, $lt: priceMax } }],
     });
     res.json(result);
 };
-
-export const sortBetweenPriceCateAndQuery = async (req, res, next) => {
+export const sortBetweenPriceNameCate = async (req, res, next) => {
+    const name = req.query.name;
+    const category = req.query.category;
+    const priceMin = req.query.priceMin;
+    const priceMax = req.query.priceMax;
     const result = await products.find({
         $and: [
-            { price: { $gt: req.body.priceMin, $lt: req.body.priceMax } },
-            { category: req.body.category },
-            { name: { $regex: req.body.key, $options: 'i' } },
+            { name: { $regex: name, $options: 'i' } },
+            { category: category },
+            { price: { $gt: priceMin, $lt: priceMax } },
         ],
     });
     res.json(result);
 };
-
-export const getSelling = async (req, res, next) => {
-    const body = req.body;
+//
+export const querySelling = async (req, res, next) => {
+    const quantity = req.query.quantity;
     const result = await products
         .find({}, 'name price discount priceDiscount img sold')
         .sort({ sold: -1 })
-        .limit(body.quantity);
+        .limit(quantity);
     res.json(result);
 };
-
-export const getTrending = async (req, res, next) => {
+export const queryTrending = async (req, res, next) => {
+    const quantity = req.query.quantity;
     const result = await products
         .find({}, '_id name price title discount priceDiscount img views')
         .sort({ views: -1 })
-        .limit(12);
+        .limit(quantity);
     res.json(result);
 };
 
@@ -181,23 +210,16 @@ export const findAndUpdateViews = async (req, res, next) => {
     res.json(result);
 };
 
-export const findBestCate = async (req, res, next) => {
-    const body = req.body;
-    const result = await products.find({ category: body.category }).sort({ sold: -1 }).limit(body.quantity);
+export const querySoldCate = async (req, res, next) => {
+    const category = req.query.category;
+    const quantity = req.query.quantity;
+    const result = await products.find({ category: category }).sort({ sold: -1 }).limit(quantity);
     res.json(result);
 };
 
-export const findSoldCate = async (req, res, next) => {
-    const body = req.body;
-    const result = await products
-        .find({ category: body.category }, '_id name price title discount priceDiscount img views')
-        .sort({ sold: -1 });
-    res.json(result);
-};
-
-export const findNote = async (req, res, next) => {
-    const body = req.body;
-    const result = await products.find({ note: body.note }, '_id name price title discount priceDiscount img views');
+export const queryNote = async (req, res, next) => {
+    const note = req.query.note;
+    const result = await products.find({ note: note }, '_id name price title discount priceDiscount img views');
     res.json(result);
 };
 

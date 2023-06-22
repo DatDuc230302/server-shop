@@ -12,9 +12,9 @@ export const addUsers = async (req, res, next) => {
     res.json(data);
 };
 
-export const findIdUsers = async (req, res, next) => {
-    const body = req.body;
-    const data = await users.find({ id: body.id });
+export const queryId = async (req, res, next) => {
+    const id = req.query.id;
+    const data = await users.find({ id: id });
     res.json(data);
 };
 

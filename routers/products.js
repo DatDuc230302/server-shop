@@ -2,29 +2,34 @@ import express from 'express';
 import {
     addProducts,
     getProducts,
-    findName,
-    findNameCate,
-    findNameCateAndQuery,
-    sortDate,
+    //
+    queryName,
+    queryCate,
+    queryNameCate,
+    //
+    sortDateName,
     sortDateCate,
-    sortDateCateAndQuery,
-    sortLowest,
+    sortDateNameCate,
+    //
+    sortLowestName,
     sortLowestCate,
-    sortLowestCateAndQuery,
-    sortHighest,
+    sortLowestNameCate,
+    //
+    sortHighestName,
     sortHighestCate,
-    sortHighestCateAndQuery,
-    sortBetweenPrice,
+    sortHighestNameCate,
+    //
+    sortBetweenPriceName,
     sortBetweenPriceCate,
-    sortBetweenPriceCateAndQuery,
-    findId,
+    sortBetweenPriceNameCate,
+    //
+    queryId,
     findAllById,
-    getSelling,
-    getTrending,
+    querySelling,
+    queryTrending,
     findAndUpdateViews,
-    findBestCate,
-    findSoldCate,
-    findNote,
+    querySoldCate,
+    queryNote,
 
     // PopularSearch
     getPopularSearch,
@@ -33,31 +38,37 @@ import {
 
 const productsRouter = express.Router();
 
-productsRouter.get('/products/get', getProducts);
 productsRouter.post('/products/add', addProducts);
-productsRouter.post('/products/findId', findId);
-productsRouter.post('/products/findName', findName);
-productsRouter.post('/products/findNameCate', findNameCate);
-productsRouter.post('/products/findNameCateAndQuery', findNameCateAndQuery);
+productsRouter.get('/products/get', getProducts);
+//
+productsRouter.get('/products/queryName', queryName);
+productsRouter.get('/products/queryCate', queryCate);
+productsRouter.get('/products/queryNameCate', queryNameCate);
+//
+productsRouter.get('/products/queryId', queryId);
 productsRouter.post('/products/findAllById', findAllById);
-productsRouter.post('/products/sortDate', sortDate);
-productsRouter.post('/products/sortDateCate', sortDateCate);
-productsRouter.post('/products/sortDateCateAndQuery', sortDateCateAndQuery);
-productsRouter.post('/products/sortLowest', sortLowest);
-productsRouter.post('/products/sortLowestCate', sortLowestCate);
-productsRouter.post('/products/sortLowestCateAndQuery', sortLowestCateAndQuery);
-productsRouter.post('/products/sortHighest', sortHighest);
-productsRouter.post('/products/sortHighestCate', sortHighestCate);
-productsRouter.post('/products/sortHighestCateAndQuery', sortHighestCateAndQuery);
-productsRouter.post('/products/sortBetweenPrice', sortBetweenPrice);
-productsRouter.post('/products/sortBetweenPriceCate', sortBetweenPriceCate);
-productsRouter.post('/products/sortBetweenPriceCateAndQuery', sortBetweenPriceCateAndQuery);
-productsRouter.post('/products/getSelling', getSelling);
-productsRouter.get('/products/getTrending', getTrending);
+//
+productsRouter.get('/products/sortDateName', sortDateName);
+productsRouter.get('/products/sortDateCate', sortDateCate);
+productsRouter.get('/products/sortDateNameCate', sortDateNameCate);
+//
+productsRouter.get('/products/sortLowestName', sortLowestName);
+productsRouter.get('/products/sortLowestCate', sortLowestCate);
+productsRouter.get('/products/sortLowestNameCate', sortLowestNameCate);
+//
+productsRouter.get('/products/sortHighestName', sortHighestName);
+productsRouter.get('/products/sortHighestCate', sortHighestCate);
+productsRouter.get('/products/sortHighestNameCate', sortHighestNameCate);
+//
+productsRouter.get('/products/sortBetweenPriceName', sortBetweenPriceName);
+productsRouter.get('/products/sortBetweenPriceCate', sortBetweenPriceCate);
+productsRouter.get('/products/sortBetweenPriceNameCate', sortBetweenPriceNameCate);
+//
+productsRouter.get('/products/querySelling', querySelling);
+productsRouter.get('/products/queryTrending', queryTrending);
 productsRouter.post('/products/findAndUpdateViews', findAndUpdateViews);
-productsRouter.post('/products/findBestCate', findBestCate);
-productsRouter.post('/products/findSoldCate', findSoldCate);
-productsRouter.post('/products/findNote', findNote);
+productsRouter.get('/products/querySoldCate', querySoldCate);
+productsRouter.get('/products/queryNote', queryNote);
 
 // PopularSearches
 productsRouter.get('/products/popularSearch/get', getPopularSearch);
