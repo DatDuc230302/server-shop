@@ -34,6 +34,7 @@ import {
     // PopularSearch
     getPopularSearch,
     addPopularSearch,
+    searchName,
 } from '../controllers/productsController.js';
 
 const productsRouter = express.Router();
@@ -44,6 +45,8 @@ productsRouter.get('/products/get', getProducts);
 productsRouter.get('/products/queryName', queryName);
 productsRouter.get('/products/queryCate', queryCate);
 productsRouter.get('/products/queryNameCate', queryNameCate);
+//Search Name
+productsRouter.get('/products/searchName', searchName);
 //
 productsRouter.get('/products/queryId', queryId);
 productsRouter.post('/products/findAllById', findAllById);

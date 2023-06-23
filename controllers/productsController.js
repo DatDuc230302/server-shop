@@ -1,19 +1,5 @@
 import { popularSearch, products } from '../models/productsModel.js';
 
-export const getProducts = async (req, res, next) => {
-    const pageSize = req.query.pageSize;
-    const pageNum = req.query.pageNum;
-    const skipAmount = pageSize * (pageNum - 1);
-    const data = await products.find().skip(skipAmount).limit(pageSize);
-    const totalProducts = await products.countDocuments();
-    // Lấy dữ liệu phân trang
-
-    res.json({
-        totalProducts: totalProducts,
-        data: data,
-    });
-};
-
 export const addProducts = async (req, res, next) => {
     const body = req.body;
     const data = await products(body);
@@ -21,27 +7,94 @@ export const addProducts = async (req, res, next) => {
     res.json({ status: true });
 };
 
+export const getProducts = async (req, res, next) => {
+    const pageSize = req.query.pageSize;
+    const pageNum = req.query.pageNum;
+    const skipAmount = pageSize * (pageNum - 1);
+    const result = await products.find().skip(skipAmount).limit(pageSize);
+    const totalProducts = await products.find();
+    // Lấy dữ liệu phân trang
+
+    res.json({
+        totalProducts: totalProducts,
+        result: result,
+    });
+};
+
 // Query
 export const queryName = async (req, res, next) => {
-    const name = req.query.query;
-    const result = await products.find({
+    const name = req.query.name;
+    const pageSize = req.query.pageSize;
+    const pageNum = req.query.pageNum;
+    const skipAmount = pageSize * (pageNum - 1);
+    const result = await products
+        .find({
+            $or: [{ name: { $regex: name, $options: 'i' } }],
+        })
+        .skip(skipAmount)
+        .limit(pageSize);
+
+    // Count Total Products
+    const totalProducts = await products.find({
         $or: [{ name: { $regex: name, $options: 'i' } }],
     });
-    res.json(result);
+
+    // Return Json to Front End
+    res.json({
+        totalProducts: totalProducts,
+        result: result,
+    });
 };
 export const queryCate = async (req, res, next) => {
     const category = req.query.category;
-    const result = await products.find({
+    const pageSize = req.query.pageSize;
+    const pageNum = req.query.pageNum;
+    const skipAmount = pageSize * (pageNum - 1);
+    const result = await products
+        .find({
+            $or: [{ category: { $regex: category, $options: 'i' } }],
+        })
+        .skip(skipAmount)
+        .limit(pageSize);
+
+    const totalProducts = await products.find({
         $or: [{ category: { $regex: category, $options: 'i' } }],
     });
-    res.json(result);
+    res.json({
+        totalProducts: totalProducts,
+        result: result,
+    });
 };
 export const queryNameCate = async (req, res, next) => {
     const name = req.query.name;
     const category = req.query.category;
-    const result = await products.find({
+    const pageSize = req.query.pageSize;
+    const pageNum = req.query.pageNum;
+    const skipAmount = pageSize * (pageNum - 1);
+    const result = await products
+        .find({
+            $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
+        })
+        .skip(skipAmount)
+        .limit(pageSize);
+
+    const totalProducts = await products.find({
         $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
     });
+
+    res.json({
+        totalProducts: totalProducts,
+        result: result,
+    });
+};
+
+// Search Name
+export const searchName = async (req, res, next) => {
+    const name = req.query.name;
+    const result = await products.find({
+        $or: [{ name: { $regex: name, $options: 'i' } }],
+    });
+    // Return Json to Front End
     res.json(result);
 };
 
@@ -65,21 +118,52 @@ export const findAllById = async (req, res, next) => {
 // Sort Date
 export const sortDateName = async (req, res, next) => {
     const name = req.query.name;
+    const pageSize = req.query.pageSize;
+    const pageNum = req.query.pageNum;
+    const skipAmount = pageSize * (pageNum - 1);
     const result = await products
         .find({
             $or: [{ name: { $regex: name, $options: 'i' } }],
         })
         .sort({ createdAt: -1 })
-        .res.json(result);
+        .skip(skipAmount)
+        .limit(pageSize);
+
+    // Get Total Products
+    const totalProducts = await products
+        .find({
+            $or: [{ name: { $regex: name, $options: 'i' } }],
+        })
+        .sort({ createdAt: -1 });
+
+    res.json({
+        totalProducts: totalProducts,
+        result: result,
+    });
 };
 export const sortDateCate = async (req, res, next) => {
     const category = req.query.category;
+    const pageSize = req.query.pageSize;
+    const pageNum = req.query.pageNum;
+    const skipAmount = pageSize * (pageNum - 1);
     const result = await products
         .find({
             $or: [{ category: { $regex: category, $options: 'i' } }],
         })
+        .sort({ createdAt: -1 })
+        .skip(skipAmount)
+        .limit(pageSize);
+
+    const totalProducts = await products
+        .find({
+            $or: [{ category: { $regex: category, $options: 'i' } }],
+        })
         .sort({ createdAt: -1 });
-    res.json(result);
+
+    res.json({
+        totalProducts: totalProducts,
+        result: result,
+    });
 };
 export const sortDateNameCate = async (req, res, next) => {
     const name = req.query.name;
