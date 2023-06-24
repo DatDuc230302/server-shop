@@ -7,20 +7,12 @@ import {
     queryCate,
     queryNameCate,
     //
-    sortDateName,
-    sortDateCate,
     sortDateNameCate,
     //
-    sortLowestName,
-    sortLowestCate,
     sortLowestNameCate,
     //
-    sortHighestName,
-    sortHighestCate,
     sortHighestNameCate,
     //
-    sortBetweenPriceName,
-    sortBetweenPriceCate,
     sortBetweenPriceNameCate,
     //
     queryId,
@@ -51,20 +43,12 @@ productsRouter.get('/products/searchName', searchName);
 productsRouter.get('/products/queryId', queryId);
 productsRouter.post('/products/findAllById', findAllById);
 //
-productsRouter.get('/products/sortDateName', sortDateName);
-productsRouter.get('/products/sortDateCate', sortDateCate);
 productsRouter.get('/products/sortDateNameCate', sortDateNameCate);
 //
-productsRouter.get('/products/sortLowestName', sortLowestName);
-productsRouter.get('/products/sortLowestCate', sortLowestCate);
 productsRouter.get('/products/sortLowestNameCate', sortLowestNameCate);
 //
-productsRouter.get('/products/sortHighestName', sortHighestName);
-productsRouter.get('/products/sortHighestCate', sortHighestCate);
 productsRouter.get('/products/sortHighestNameCate', sortHighestNameCate);
 //
-productsRouter.get('/products/sortBetweenPriceName', sortBetweenPriceName);
-productsRouter.get('/products/sortBetweenPriceCate', sortBetweenPriceCate);
 productsRouter.get('/products/sortBetweenPriceNameCate', sortBetweenPriceNameCate);
 //
 productsRouter.get('/products/querySelling', querySelling);

@@ -116,158 +116,230 @@ export const findAllById = async (req, res, next) => {
 };
 
 // Sort Date
-export const sortDateName = async (req, res, next) => {
-    const name = req.query.name;
-    const pageSize = req.query.pageSize;
-    const pageNum = req.query.pageNum;
-    const skipAmount = pageSize * (pageNum - 1);
-    const result = await products
-        .find({
-            $or: [{ name: { $regex: name, $options: 'i' } }],
-        })
-        .sort({ createdAt: -1 })
-        .skip(skipAmount)
-        .limit(pageSize);
-
-    // Get Total Products
-    const totalProducts = await products
-        .find({
-            $or: [{ name: { $regex: name, $options: 'i' } }],
-        })
-        .sort({ createdAt: -1 });
-
-    res.json({
-        totalProducts: totalProducts,
-        result: result,
-    });
-};
-export const sortDateCate = async (req, res, next) => {
-    const category = req.query.category;
-    const pageSize = req.query.pageSize;
-    const pageNum = req.query.pageNum;
-    const skipAmount = pageSize * (pageNum - 1);
-    const result = await products
-        .find({
-            $or: [{ category: { $regex: category, $options: 'i' } }],
-        })
-        .sort({ createdAt: -1 })
-        .skip(skipAmount)
-        .limit(pageSize);
-
-    const totalProducts = await products
-        .find({
-            $or: [{ category: { $regex: category, $options: 'i' } }],
-        })
-        .sort({ createdAt: -1 });
-
-    res.json({
-        totalProducts: totalProducts,
-        result: result,
-    });
-};
 export const sortDateNameCate = async (req, res, next) => {
     const name = req.query.name;
     const category = req.query.category;
-    const result = await products
-        .find({
-            $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
-        })
-        .sort({ createdAt: -1 });
-    res.json(result);
+    const pageSize = req.query.pageSize;
+    const pageNum = req.query.pageNum;
+    const skipAmount = pageSize * (pageNum - 1);
+    let totalProducts;
+    let result;
+    if (category !== 'undefined') {
+        if (name.length > 0) {
+            // Sort Date Name Category
+            result = await products
+                .find({
+                    $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
+                })
+                .sort({ createdAt: -1 })
+                .skip(skipAmount)
+                .limit(pageSize);
+            totalProducts = await products
+                .find({
+                    $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
+                })
+                .sort({ createdAt: -1 });
+        } else {
+            // Sort Date Cate
+            result = await products
+                .find({ category: category })
+                .sort({ createdAt: -1 })
+                .skip(skipAmount)
+                .limit(pageSize);
+
+            totalProducts = await products.find({ category: category }).sort({ createdAt: -1 });
+        }
+    } else {
+        if (name.length > 0) {
+            // Sort Date Name
+            result = await products
+                .find({ name: { $regex: name, $options: 'i' } })
+                .sort({ createdAt: -1 })
+                .skip(skipAmount)
+                .limit(pageSize);
+            totalProducts = await products.find({ name: { $regex: name, $options: 'i' } });
+        } else {
+            // Sort Date All
+            result = await products.find({}).sort({ createdAt: -1 }).skip(skipAmount).limit(pageSize);
+            totalProducts = await products.find({});
+        }
+    }
+    res.json({
+        result: result,
+        totalProducts: totalProducts,
+    });
 };
 
 // Sort Price Lowest
-export const sortLowestName = async (req, res, next) => {
-    const name = req.query.name;
-    const result = await products
-        .find({
-            $or: [{ name: { $regex: name, $options: 'i' } }],
-        })
-        .sort({ price: 1 });
-    res.json(result);
-};
-export const sortLowestCate = async (req, res, next) => {
-    const category = req.query.category;
-    const result = await products
-        .find({
-            $or: [{ category: { $regex: category, $options: 'i' } }],
-        })
-        .sort({ price: 1 });
-    res.json(result);
-};
 export const sortLowestNameCate = async (req, res, next) => {
     const name = req.query.name;
     const category = req.query.category;
-    const result = await products
-        .find({
-            $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
-        })
-        .sort({ price: 1 });
-    res.json(result);
+    const pageSize = req.query.pageSize;
+    const pageNum = req.query.pageNum;
+    const skipAmount = pageSize * (pageNum - 1);
+    let totalProducts;
+    let result;
+    if (category !== 'undefined') {
+        if (name.length > 0) {
+            // Sort Lowest Name Category
+            result = await products
+                .find({
+                    $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
+                })
+                .sort({ price: 1 })
+                .skip(skipAmount)
+                .limit(pageSize);
+            totalProducts = await products
+                .find({
+                    $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
+                })
+                .sort({ price: 1 });
+        } else {
+            // Sort Lowest Cate
+            result = await products.find({ category: category }).sort({ price: 1 }).skip(skipAmount).limit(pageSize);
+
+            totalProducts = await products.find({ category: category }).sort({ price: 1 });
+        }
+    } else {
+        if (name.length > 0) {
+            // Sort Lowest Name
+            result = await products
+                .find({ name: { $regex: name, $options: 'i' } })
+                .sort({ price: 1 })
+                .skip(skipAmount)
+                .limit(pageSize);
+            totalProducts = await products.find({ name: { $regex: name, $options: 'i' } });
+        } else {
+            // Sort Lowest All
+            result = await products.find({}).sort({ price: 1 }).skip(skipAmount).limit(pageSize);
+            totalProducts = await products.find({});
+        }
+    }
+    res.json({
+        result: result,
+        totalProducts: totalProducts,
+    });
 };
 
 // Sort Price Highest
-export const sortHighestName = async (req, res, next) => {
-    const name = req.query.name;
-    const result = await products
-        .find({
-            $or: [{ name: { $regex: name, $options: 'i' } }],
-        })
-        .sort({ price: -1 });
-    res.json(result);
-};
-export const sortHighestCate = async (req, res, next) => {
-    const category = req.query.categor;
-    const result = await products
-        .find({
-            $or: [{ category: { $regex: category, $options: 'i' } }],
-        })
-        .sort({ price: -1 });
-    res.json(result);
-};
 export const sortHighestNameCate = async (req, res, next) => {
     const name = req.query.name;
     const category = req.query.category;
-    const result = await products
-        .find({
-            $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
-        })
-        .sort({ price: -1 });
-    res.json(result);
+    const pageSize = req.query.pageSize;
+    const pageNum = req.query.pageNum;
+    const skipAmount = pageSize * (pageNum - 1);
+    let totalProducts;
+    let result;
+    if (category !== 'undefined') {
+        if (name.length > 0) {
+            // Sort Lowest Name Category
+            result = await products
+                .find({
+                    $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
+                })
+                .sort({ price: -1 })
+                .skip(skipAmount)
+                .limit(pageSize);
+            totalProducts = await products
+                .find({
+                    $and: [{ name: { $regex: name, $options: 'i' } }, { category: category }],
+                })
+                .sort({ price: -1 });
+        } else {
+            // Sort Lowest Cate
+            result = await products.find({ category: category }).sort({ price: -1 }).skip(skipAmount).limit(pageSize);
+
+            totalProducts = await products.find({ category: category }).sort({ price: -1 });
+        }
+    } else {
+        if (name.length > 0) {
+            // Sort Lowest Name
+            result = await products
+                .find({ name: { $regex: name, $options: 'i' } })
+                .sort({ price: -1 })
+                .skip(skipAmount)
+                .limit(pageSize);
+            totalProducts = await products.find({ name: { $regex: name, $options: 'i' } });
+        } else {
+            // Sort Lowest All
+            result = await products.find({}).sort({ price: -1 }).skip(skipAmount).limit(pageSize);
+            totalProducts = await products.find({});
+        }
+    }
+    res.json({
+        result: result,
+        totalProducts: totalProducts,
+    });
 };
 
 // Sort Price Between
-export const sortBetweenPriceName = async (req, res, next) => {
-    const name = req.query.name;
-    const priceMin = req.query.priceMin;
-    const priceMax = req.query.priceMax;
-    const result = await products.find({
-        $and: [{ name: { $regex: name, $options: 'i' } }, { price: { $gt: priceMin, $lt: priceMax } }],
-    });
-    res.json(result);
-};
-export const sortBetweenPriceCate = async (req, res, next) => {
-    const category = req.query.category;
-    const priceMin = req.query.priceMin;
-    const priceMax = req.query.priceMax;
-    const result = await products.find({
-        $and: [{ category: category }, { price: { $gt: priceMin, $lt: priceMax } }],
-    });
-    res.json(result);
-};
 export const sortBetweenPriceNameCate = async (req, res, next) => {
     const name = req.query.name;
     const category = req.query.category;
     const priceMin = req.query.priceMin;
     const priceMax = req.query.priceMax;
-    const result = await products.find({
-        $and: [
-            { name: { $regex: name, $options: 'i' } },
-            { category: category },
-            { price: { $gt: priceMin, $lt: priceMax } },
-        ],
+    const pageSize = req.query.pageSize;
+    const pageNum = req.query.pageNum;
+    const skipAmount = pageSize * (pageNum - 1);
+    let result;
+    let totalProducts;
+    if (category !== 'undefined') {
+        if (name.length > 0) {
+            // Sort Lowest Name Category
+            result = await products
+                .find({
+                    $and: [
+                        { name: { $regex: name, $options: 'i' } },
+                        { category: category },
+                        { price: { $gt: priceMin, $lt: priceMax } },
+                    ],
+                })
+                .skip(skipAmount)
+                .limit(pageSize);
+
+            totalProducts = await products.find({
+                $and: [
+                    { name: { $regex: name, $options: 'i' } },
+                    { category: category },
+                    { price: { $gt: priceMin, $lt: priceMax } },
+                ],
+            });
+        } else {
+            // Sort Lowest Cate
+            result = await products
+                .find({ $and: [{ category: category }, { price: { $gt: priceMin, $lt: priceMax } }] })
+                .skip(skipAmount)
+                .limit(pageSize);
+
+            totalProducts = await products.find({
+                $and: [{ category: category }, { price: { $gt: priceMin, $lt: priceMax } }],
+            });
+        }
+    } else {
+        if (name.length > 0) {
+            // Sort Lowest Name
+            result = await products
+                .find({
+                    $and: [{ name: { $regex: name, $options: 'i' } }, { price: { $gt: priceMin, $lt: priceMax } }],
+                })
+                .skip(skipAmount)
+                .limit(pageSize);
+            totalProducts = await products.find({
+                $and: [{ name: { $regex: name, $options: 'i' } }, { price: { $gt: priceMin, $lt: priceMax } }],
+            });
+        } else {
+            // Sort Lowest All
+            result = await products
+                .find({ price: { $gt: priceMin, $lt: priceMax } })
+                .skip(skipAmount)
+                .limit(pageSize);
+            totalProducts = await products.find({ price: { $gt: priceMin, $lt: priceMax } });
+        }
+    }
+    res.json({
+        result: result,
+        totalProducts: totalProducts,
     });
-    res.json(result);
 };
 //
 export const querySelling = async (req, res, next) => {
