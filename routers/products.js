@@ -1,8 +1,8 @@
 import express from 'express';
 import {
     addProducts,
-    getProducts,
     //
+    queryAll,
     queryName,
     queryCate,
     queryNameCate,
@@ -12,8 +12,6 @@ import {
     sortLowestNameCate,
     //
     sortHighestNameCate,
-    //
-    sortBetweenPriceNameCate,
     //
     queryId,
     findAllById,
@@ -32,8 +30,8 @@ import {
 const productsRouter = express.Router();
 
 productsRouter.post('/products/add', addProducts);
-productsRouter.get('/products/get', getProducts);
 //
+productsRouter.get('/products/queryAll', queryAll);
 productsRouter.get('/products/queryName', queryName);
 productsRouter.get('/products/queryCate', queryCate);
 productsRouter.get('/products/queryNameCate', queryNameCate);
@@ -48,8 +46,6 @@ productsRouter.get('/products/sortDateNameCate', sortDateNameCate);
 productsRouter.get('/products/sortLowestNameCate', sortLowestNameCate);
 //
 productsRouter.get('/products/sortHighestNameCate', sortHighestNameCate);
-//
-productsRouter.get('/products/sortBetweenPriceNameCate', sortBetweenPriceNameCate);
 //
 productsRouter.get('/products/querySelling', querySelling);
 productsRouter.get('/products/queryTrending', queryTrending);
