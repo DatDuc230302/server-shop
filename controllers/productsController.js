@@ -32,7 +32,7 @@ export const queryName = async (req, res, next) => {
     const pageNum = req.query.pageNum <= 0 ? 1 : req.query.pageNum;
     const skipAmount = pageSize * (pageNum - 1);
     const priceMin = Number(req.query.priceMin);
-    const priceMax = Number(req.query.priceMax) === 0 ? 100000000 : Number(req.query.priceMax);
+    const priceMax = Number(req.query.priceMax) <= 0 ? 100000000 : Number(req.query.priceMax);
     const result = await products
         .find({
             $and: [{ name: { $regex: name, $options: 'i' } }, { price: { $gt: priceMin, $lt: priceMax } }],
@@ -51,13 +51,20 @@ export const queryName = async (req, res, next) => {
         result: result,
     });
 };
+export const queryOnlyName = async (req, res, next) => {
+    const name = req.query.name;
+    const result = await products.find({
+        $or: [{ name: { $regex: name, $options: 'i' } }],
+    });
+    res.json(result);
+};
 export const queryCate = async (req, res, next) => {
     const category = req.query.category;
-    const pageSize = req.query.pageSize;
-    const pageNum = req.query.pageNum <= 0 ? 1 : req.query.pageNum;
+    const pageSize = Number(req.query.pageSize);
+    const pageNum = Number(req.query.pageNum);
     const skipAmount = pageSize * (pageNum - 1);
     const priceMin = Number(req.query.priceMin);
-    const priceMax = Number(req.query.priceMax) === 0 ? 100000000 : Number(req.query.priceMax);
+    const priceMax = Number(req.query.priceMax) <= 0 ? 100000000 : Number(req.query.priceMax);
     const result = await products
         .find({
             $and: [{ category: { $regex: category, $options: 'i' } }, { price: { $gt: priceMin, $lt: priceMax } }],
@@ -74,6 +81,11 @@ export const queryCate = async (req, res, next) => {
         result: result,
     });
 };
+export const queryOnlyCate = async (req, res, next) => {
+    const category = req.query.category;
+    const result = await products.find({ category: category });
+    res.json(result);
+};
 export const queryNameCate = async (req, res, next) => {
     const name = req.query.name;
     const category = req.query.category;
@@ -81,7 +93,7 @@ export const queryNameCate = async (req, res, next) => {
     const pageNum = req.query.pageNum;
     const skipAmount = pageSize * (pageNum - 1);
     const priceMin = Number(req.query.priceMin);
-    const priceMax = Number(req.query.priceMax) === 0 ? 100000000 : Number(req.query.priceMax);
+    const priceMax = Number(req.query.priceMax) <= 0 ? 100000000 : Number(req.query.priceMax);
     const result = await products
         .find({
             $and: [
@@ -108,14 +120,6 @@ export const queryNameCate = async (req, res, next) => {
 };
 
 // Search Name
-export const searchName = async (req, res, next) => {
-    const name = req.query.name;
-    const result = await products.find({
-        $or: [{ name: { $regex: name, $options: 'i' } }],
-    });
-    // Return Json to Front End
-    res.json(result);
-};
 
 // Query Id
 export const queryId = async (req, res, next) => {
@@ -137,12 +141,12 @@ export const findAllById = async (req, res, next) => {
 
 // Sort Date
 export const sortDateNameCate = async (req, res, next) => {
-    const name = req.query.name;
+    const name = !req.query.name ? '' : req.query.name;
     const category = req.query.category;
-    const pageSize = req.query.pageSize;
-    const pageNum = req.query.pageNum;
+    const pageSize = !req.query.pageSize ? 100000 : req.query.pageSize;
+    const pageNum = !req.query.pageNum ? 1 : req.query.pageNum;
     const skipAmount = pageSize * (pageNum - 1);
-    const priceMin = Number(req.query.priceMin);
+    const priceMin = !Number(req.query.priceMin) ? 0 : Number(req.query.priceMin);
     const priceMax = Number(req.query.priceMax) === 0 ? 100000000 : Number(req.query.priceMax);
     let totalProducts;
     let result;
@@ -208,6 +212,11 @@ export const sortDateNameCate = async (req, res, next) => {
         result: result,
         totalProducts: totalProducts,
     });
+};
+export const sortDateOnlyCate = async (req, res, next) => {
+    const category = req.query.category;
+    const result = await products.find({ category: category }).sort({ createdAt: -1 });
+    res.json(result);
 };
 
 // Sort Price Lowest
