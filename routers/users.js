@@ -8,6 +8,7 @@ import {
     getUsers,
     updateAvatar,
     updateCarts,
+    checkAdmin,
 } from '../controllers/usersController.js';
 
 const usersRouter = express.Router();
@@ -19,6 +20,8 @@ usersRouter.post('/users/addCarts', addCarts);
 usersRouter.post('/users/updateCarts', updateCarts);
 usersRouter.post('/users/deleteCarts', deleteCarts);
 usersRouter.post('/users/updateAvatar', updateAvatar);
+
+usersRouter.get('/users/checkAdmin', checkAdmin);
 
 //
 

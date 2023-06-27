@@ -18,6 +18,16 @@ export const queryId = async (req, res, next) => {
     res.json(data);
 };
 
+export const checkAdmin = async (req, res, next) => {
+    const uid = req.query.uid;
+    const data = await users.find({ $and: [{ id: uid }, { rule: 0 }] });
+    if (data.length > 0) {
+        res.json({ status: true });
+    } else {
+        res.json({ status: false });
+    }
+};
+
 export const addCarts = async (req, res, next) => {
     const body = req.body;
     const data = users
