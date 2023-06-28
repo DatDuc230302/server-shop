@@ -26,6 +26,18 @@ export const queryAll = async (req, res, next) => {
         result: result,
     });
 };
+export const queryOnlyAll = async (req, res, next) => {
+    const pageSize = req.query.pageSize;
+    const pageNum = req.query.pageNum <= 0 ? 1 : req.query.pageNum;
+    const skipAmount = pageSize * (pageNum - 1);
+    const result = await products.find().skip(skipAmount).limit(pageSize);
+    const totalProducts = await products.find();
+
+    res.json({
+        totalProducts: totalProducts,
+        result: result,
+    });
+};
 export const queryName = async (req, res, next) => {
     const name = req.query.name;
     const pageSize = req.query.pageSize;
@@ -53,10 +65,22 @@ export const queryName = async (req, res, next) => {
 };
 export const queryOnlyName = async (req, res, next) => {
     const name = req.query.name;
-    const result = await products.find({
+    const pageNum = !req.query.pageNum ? 1 : Number(req.query.pageNum);
+    const pageSize = !req.query.pageSize ? 1000000 : req.query.pageSize;
+    const skipAmount = pageSize * (pageNum - 1);
+    const result = await products
+        .find({
+            $or: [{ name: { $regex: name, $options: 'i' } }],
+        })
+        .skip(skipAmount)
+        .limit(pageSize);
+    const totalProducts = await products.find({
         $or: [{ name: { $regex: name, $options: 'i' } }],
     });
-    res.json(result);
+    res.json({
+        result: result,
+        totalProducts: totalProducts,
+    });
 };
 export const queryCate = async (req, res, next) => {
     const category = req.query.category;

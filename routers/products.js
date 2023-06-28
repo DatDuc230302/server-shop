@@ -3,6 +3,7 @@ import {
     addProducts,
     //
     queryAll,
+    queryOnlyAll,
     queryName,
     queryOnlyName,
     queryCate,
@@ -34,6 +35,7 @@ const productsRouter = express.Router();
 productsRouter.post('/products/add', addProducts);
 //
 productsRouter.get('/products/queryAll', queryAll);
+productsRouter.get('/products/queryOnlyAll', queryOnlyAll);
 productsRouter.get('/products/queryName', queryName);
 productsRouter.get('/products/queryOnlyName', queryOnlyName);
 productsRouter.get('/products/queryCate', queryCate);
