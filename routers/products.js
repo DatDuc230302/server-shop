@@ -1,6 +1,7 @@
 import express from 'express';
 import {
     addProducts,
+    updateProductById,
     //
     queryAll,
     queryOnlyAll,
@@ -33,6 +34,7 @@ import {
 const productsRouter = express.Router();
 
 productsRouter.post('/products/add', addProducts);
+productsRouter.post('/products/updateProductById', updateProductById);
 //
 productsRouter.get('/products/queryAll', queryAll);
 productsRouter.get('/products/queryOnlyAll', queryOnlyAll);

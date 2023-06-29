@@ -7,6 +7,34 @@ export const addProducts = async (req, res, next) => {
     res.json({ status: true });
 };
 
+export const updateProductById = async (req, res, next) => {
+    try {
+        const id = req.body.id;
+        const { name, price, discount, priceDiscount, title, description, category, img } = req.body;
+        const result = await products.findByIdAndUpdate(
+            id,
+            {
+                name,
+                price,
+                discount,
+                priceDiscount,
+                title,
+                description,
+                category,
+                img,
+            },
+            { new: true },
+        );
+        if (result) {
+            res.status(200).json({ success: true });
+        } else {
+            res.status(404).json({ success: false });
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
 // Query
 export const queryAll = async (req, res, next) => {
     const pageSize = req.query.pageSize;
