@@ -10,7 +10,7 @@ export const addProducts = async (req, res, next) => {
 export const updateProductById = async (req, res, next) => {
     try {
         const id = req.body.id;
-        const { name, price, discount, priceDiscount, title, description, category, img } = req.body;
+        const { name, price, discount, priceDiscount, title, description, type, category, img } = req.body;
         const result = await products.findByIdAndUpdate(
             id,
             {
@@ -20,6 +20,7 @@ export const updateProductById = async (req, res, next) => {
                 priceDiscount,
                 title,
                 description,
+                type,
                 category,
                 img,
             },
@@ -175,9 +176,18 @@ export const queryNameCate = async (req, res, next) => {
 
 // Query Id
 export const queryId = async (req, res, next) => {
-    const id = req.query.id;
-    const result = await products.find({ _id: id });
-    res.json(result);
+    try {
+        const id = req.query.id;
+        const result = await products.find({ _id: id });
+        console.log(id);
+        if (result) {
+            res.status(200).json(result);
+        } else {
+            res.status(404);
+        }
+    } catch {
+        console.log('Lỗi');
+    }
 };
 
 // Query All Id
@@ -439,11 +449,15 @@ export const queryTrending = async (req, res, next) => {
     res.json(result);
 };
 
-export const findAndUpdateViews = async (req, res, next) => {
-    const body = req.body;
-    await products.findOneAndUpdate({ _id: body.id }, { $inc: { views: 1 } }, { upsert: true, new: true });
-    const result = await products.find({ _id: body.id });
-    res.json(result);
+export const findIdAndUpdateViews = async (req, res, next) => {
+    try {
+        const body = req.body;
+        const result = await products.find({ _id: body.id });
+        // await products.findOneAndUpdate({ _id: body.id }, { $inc: { views: 1 } }, { upsert: true, new: true });
+        res.status(200).json(result);
+    } catch {
+        res.json({ status: 404 });
+    }
 };
 
 export const querySoldCate = async (req, res, next) => {
@@ -453,9 +467,9 @@ export const querySoldCate = async (req, res, next) => {
     res.json(result);
 };
 
-export const queryNote = async (req, res, next) => {
-    const note = req.query.note;
-    const result = await products.find({ note: note }, '_id name price title discount priceDiscount img views');
+export const queryType = async (req, res, next) => {
+    const type = req.query.type;
+    const result = await products.find({ type: type }, '_id name price title discount priceDiscount img views');
     res.json(result);
 };
 

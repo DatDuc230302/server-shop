@@ -8,11 +8,11 @@ const schema = new mongoose.Schema(
         priceDiscount: Number,
         title: String,
         description: String,
+        type: String,
         category: String,
         img: String,
         sold: Number,
         views: Number,
-        note: String,
     },
     { timestamps: true },
 );

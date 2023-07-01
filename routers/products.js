@@ -22,9 +22,9 @@ import {
     findAllById,
     querySelling,
     queryTrending,
-    findAndUpdateViews,
+    findIdAndUpdateViews,
     querySoldCate,
-    queryNote,
+    queryType,
 
     // PopularSearch
     getPopularSearch,
@@ -57,9 +57,9 @@ productsRouter.get('/products/sortHighestNameCate', sortHighestNameCate);
 //
 productsRouter.get('/products/querySelling', querySelling);
 productsRouter.get('/products/queryTrending', queryTrending);
-productsRouter.post('/products/findAndUpdateViews', findAndUpdateViews);
+productsRouter.post('/products/findIdAndUpdateViews', findIdAndUpdateViews);
 productsRouter.get('/products/querySoldCate', querySoldCate);
-productsRouter.get('/products/queryNote', queryNote);
+productsRouter.get('/products/queryType', queryType);
 
 // PopularSearches
 productsRouter.get('/products/popularSearch/get', getPopularSearch);
