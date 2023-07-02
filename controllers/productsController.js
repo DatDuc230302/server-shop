@@ -36,6 +36,44 @@ export const updateProductById = async (req, res, next) => {
     }
 };
 
+export const addKey = async (req, res, next) => {
+    try {
+        const { id, key } = req.body;
+        const updatedDoc = await products
+            .findOneAndUpdate(
+                {
+                    _id: id,
+                },
+                { $push: { keys: key } },
+                { new: true },
+            )
+            .exec();
+        res.status(200).json({ status: 200 });
+    } catch (err) {
+        console.log('Error');
+        res.status(404).json({ status: 404 });
+    }
+};
+
+export const deleteKey = async (req, res, next) => {
+    try {
+        const { id, key } = req.body;
+        const updatedDoc = await products
+            .findOneAndUpdate(
+                {
+                    _id: id,
+                },
+                { $pull: { keys: key } },
+                { new: true },
+            )
+            .exec();
+        res.status(200).json({ status: 200 });
+    } catch (err) {
+        console.log(err);
+        res.status(200).json({ status: 200 });
+    }
+};
+
 // Query
 export const queryAll = async (req, res, next) => {
     const pageSize = req.query.pageSize;
@@ -179,14 +217,13 @@ export const queryId = async (req, res, next) => {
     try {
         const id = req.query.id;
         const result = await products.find({ _id: id });
-        console.log(id);
         if (result) {
             res.status(200).json(result);
         } else {
             res.status(404);
         }
     } catch {
-        console.log('Lỗi');
+        console.log('Error');
     }
 };
 
