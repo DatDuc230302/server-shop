@@ -174,7 +174,13 @@ export const queryCate = async (req, res, next) => {
 };
 export const queryOnlyCate = async (req, res, next) => {
     const category = req.query.category;
-    const result = await products.find({ category: category });
+    const quantity = req.query.quantity;
+    let result;
+    if (quantity === 'undefinde') {
+        result = await products.find({ category: category });
+    } else {
+        result = await products.find({ category: category }).limit(Number(quantity));
+    }
     res.json(result);
 };
 export const queryNameCate = async (req, res, next) => {
@@ -508,6 +514,22 @@ export const queryType = async (req, res, next) => {
     const type = req.query.type;
     const result = await products.find({ type: type }, '_id name price title discount priceDiscount img views');
     res.json(result);
+};
+
+export const queryLtPrice = async (req, res, next) => {
+    try {
+        const gtPrice = Number(req.query.gtPrice);
+        const quantity = req.query.quantity;
+        let result;
+        if (quantity === 'undefined') {
+            result = await products.find({ price: { $lt: gtPrice } });
+        } else {
+            result = await products.find({ price: { $lt: gtPrice } }).limit(Number(quantity));
+        }
+        res.status(200).json({ result: result });
+    } catch {
+        console.log('Error');
+    }
 };
 
 // popularSearches
