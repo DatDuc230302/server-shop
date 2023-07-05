@@ -3,6 +3,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import usersRouter from './routers/users.js';
 import productsRouter from './routers/products.js';
+import cartsRouter from './routers/carts.js';
 
 const app = express();
 const PORT = 5000;
@@ -17,9 +18,15 @@ app.get('', (req, res, next) => {
 // Routers
 app.use('/', usersRouter);
 app.use('/', productsRouter);
+app.use('/', cartsRouter);
+
+// Test
+
+app.get('/test', (req, res) => {
+    res.send('Test');
+});
 
 //Connect To Database
-
 const URI = 'mongodb+srv://admin:datyeudat2303@shopdb.psaacia.mongodb.net/ShopDB';
 mongoose
     .connect(URI)

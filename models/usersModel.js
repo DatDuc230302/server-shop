@@ -7,7 +7,6 @@ const schema = new mongoose.Schema(
         avatar: String,
         rule: Number,
         email: String,
-        carts: Array,
     },
     { timestamps: true },
 );

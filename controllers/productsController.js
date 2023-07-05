@@ -1,6 +1,21 @@
 import { popularSearch, products } from '../models/productsModel.js';
 
-export const addProducts = async (req, res, next) => {
+// Middleware
+export const checkIdProduct = async (req, res, next) => {
+    try {
+        const { idProduct } = req.body || req.query;
+        if (idProduct) {
+            next();
+        } else {
+            console.log('idProduct is undefined');
+        }
+    } catch {
+        console.log('Error');
+    }
+};
+
+// Products Database
+export const addProducts = async (req, res) => {
     const body = req.body;
     const data = await products(body);
     data.save();
@@ -35,8 +50,7 @@ export const updateProductById = async (req, res, next) => {
         next(error);
     }
 };
-
-export const addKey = async (req, res, next) => {
+export const addKey = async (req, res) => {
     try {
         const { id, key } = req.body;
         const updatedDoc = await products
@@ -54,8 +68,7 @@ export const addKey = async (req, res, next) => {
         res.status(404).json({ status: 404 });
     }
 };
-
-export const deleteKey = async (req, res, next) => {
+export const deleteKey = async (req, res) => {
     try {
         const { id, key } = req.body;
         const updatedDoc = await products
@@ -73,9 +86,33 @@ export const deleteKey = async (req, res, next) => {
         res.status(200).json({ status: 200 });
     }
 };
+export const getKey = async (req, res) => {
+    try {
+        const { idProduct } = req.query;
+        const getKeyFromProduct = await products.findOne({ _id: idProduct }, { keys: 1 });
+        const keyProduct = getKeyFromProduct.keys.shift();
+        res.status(200).json({ message: 'successfully', result: keyProduct });
+    } catch {
+        console.log('Error');
+    }
+};
 
-// Query
-export const queryAll = async (req, res, next) => {
+export const returnKeys = async (req, res) => {
+    try {
+        const { idProduct, returnKeys } = req.body;
+        if (returnKeys) {
+            await products.findOneAndUpdate({ _id: idProduct }, { $push: { keys: { $each: returnKeys } } });
+            res.status(200).json({ message: 'successfully' });
+        } else {
+            res.status(200).json({ message: 'fail' });
+        }
+    } catch {
+        console.log('Error');
+    }
+};
+
+// Methods Query
+export const queryAll = async (req, res) => {
     const pageSize = req.query.pageSize;
     const pageNum = req.query.pageNum <= 0 ? 1 : req.query.pageNum;
     const skipAmount = pageSize * (pageNum - 1);
@@ -93,7 +130,7 @@ export const queryAll = async (req, res, next) => {
         result: result,
     });
 };
-export const queryOnlyAll = async (req, res, next) => {
+export const queryOnlyAll = async (req, res) => {
     const pageSize = req.query.pageSize;
     const pageNum = req.query.pageNum <= 0 ? 1 : req.query.pageNum;
     const skipAmount = pageSize * (pageNum - 1);
@@ -105,7 +142,7 @@ export const queryOnlyAll = async (req, res, next) => {
         result: result,
     });
 };
-export const queryName = async (req, res, next) => {
+export const queryName = async (req, res) => {
     const name = req.query.name;
     const pageSize = req.query.pageSize;
     const pageNum = req.query.pageNum <= 0 ? 1 : req.query.pageNum;
@@ -130,7 +167,7 @@ export const queryName = async (req, res, next) => {
         result: result,
     });
 };
-export const queryOnlyName = async (req, res, next) => {
+export const queryOnlyName = async (req, res) => {
     const name = req.query.name;
     const pageNum = !req.query.pageNum ? 1 : Number(req.query.pageNum);
     const pageSize = !req.query.pageSize ? 1000000 : req.query.pageSize;
@@ -149,7 +186,7 @@ export const queryOnlyName = async (req, res, next) => {
         totalProducts: totalProducts,
     });
 };
-export const queryCate = async (req, res, next) => {
+export const queryCate = async (req, res) => {
     const category = req.query.category;
     const pageSize = Number(req.query.pageSize);
     const pageNum = Number(req.query.pageNum);
@@ -172,7 +209,7 @@ export const queryCate = async (req, res, next) => {
         result: result,
     });
 };
-export const queryOnlyCate = async (req, res, next) => {
+export const queryOnlyCate = async (req, res) => {
     const category = req.query.category;
     const quantity = req.query.quantity;
     let result;
@@ -183,7 +220,7 @@ export const queryOnlyCate = async (req, res, next) => {
     }
     res.json(result);
 };
-export const queryNameCate = async (req, res, next) => {
+export const queryNameCate = async (req, res) => {
     const name = req.query.name;
     const category = req.query.category;
     const pageSize = req.query.pageSize;
@@ -216,10 +253,8 @@ export const queryNameCate = async (req, res, next) => {
     });
 };
 
-// Search Name
-
 // Query Id
-export const queryId = async (req, res, next) => {
+export const queryId = async (req, res) => {
     try {
         const id = req.query.id;
         const result = await products.find({ _id: id });
@@ -232,20 +267,21 @@ export const queryId = async (req, res, next) => {
         console.log('Error');
     }
 };
-
-// Query All Id
-export const findAllById = async (req, res, next) => {
+export const findAllById = async (req, res) => {
     const result = [];
     const arrId = req.body.arrId;
     for (const item of arrId) {
         const foundItem = await products.findOne({ _id: item });
         result.push(foundItem);
     }
-    res.json(result);
+    res.json({
+        message: 'successfully',
+        result: result,
+    });
 };
 
-// Sort Date
-export const sortDateNameCate = async (req, res, next) => {
+// Methos Sort
+export const sortDateNameCate = async (req, res) => {
     const name = !req.query.name ? '' : req.query.name;
     const category = req.query.category;
     const pageSize = !req.query.pageSize ? 100000 : req.query.pageSize;
@@ -318,14 +354,12 @@ export const sortDateNameCate = async (req, res, next) => {
         totalProducts: totalProducts,
     });
 };
-export const sortDateOnlyCate = async (req, res, next) => {
+export const sortDateOnlyCate = async (req, res) => {
     const category = req.query.category;
     const result = await products.find({ category: category }).sort({ createdAt: -1 });
     res.json(result);
 };
-
-// Sort Price Lowest
-export const sortLowestNameCate = async (req, res, next) => {
+export const sortLowestNameCate = async (req, res) => {
     const name = req.query.name;
     const category = req.query.category;
     const pageSize = req.query.pageSize;
@@ -398,9 +432,7 @@ export const sortLowestNameCate = async (req, res, next) => {
         totalProducts: totalProducts,
     });
 };
-
-// Sort Price Highest
-export const sortHighestNameCate = async (req, res, next) => {
+export const sortHighestNameCate = async (req, res) => {
     const name = req.query.name;
     const category = req.query.category;
     const pageSize = req.query.pageSize;
@@ -474,8 +506,8 @@ export const sortHighestNameCate = async (req, res, next) => {
     });
 };
 
-//
-export const querySelling = async (req, res, next) => {
+// Methods Query Custom
+export const querySelling = async (req, res) => {
     const quantity = req.query.quantity;
     const result = await products
         .find({}, 'name price discount priceDiscount img sold')
@@ -483,7 +515,7 @@ export const querySelling = async (req, res, next) => {
         .limit(quantity);
     res.json(result);
 };
-export const queryTrending = async (req, res, next) => {
+export const queryTrending = async (req, res) => {
     const quantity = req.query.quantity;
     const result = await products
         .find({}, '_id name price title discount priceDiscount img views')
@@ -492,7 +524,7 @@ export const queryTrending = async (req, res, next) => {
     res.json(result);
 };
 
-export const findIdAndUpdateViews = async (req, res, next) => {
+export const findIdAndUpdateViews = async (req, res) => {
     try {
         const body = req.body;
         const result = await products.find({ _id: body.id });
@@ -503,20 +535,20 @@ export const findIdAndUpdateViews = async (req, res, next) => {
     }
 };
 
-export const querySoldCate = async (req, res, next) => {
+export const querySoldCate = async (req, res) => {
     const category = req.query.category;
     const quantity = req.query.quantity;
     const result = await products.find({ category: category }).sort({ sold: -1 }).limit(quantity);
     res.json(result);
 };
 
-export const queryType = async (req, res, next) => {
+export const queryType = async (req, res) => {
     const type = req.query.type;
     const result = await products.find({ type: type }, '_id name price title discount priceDiscount img views');
     res.json(result);
 };
 
-export const queryLtPrice = async (req, res, next) => {
+export const queryLtPrice = async (req, res) => {
     try {
         const gtPrice = Number(req.query.gtPrice);
         const quantity = req.query.quantity;
@@ -532,14 +564,14 @@ export const queryLtPrice = async (req, res, next) => {
     }
 };
 
-// popularSearches
+// Popular Searches Database
 
-export const getPopularSearch = async (req, res, next) => {
+export const getPopularSearch = async (req, res) => {
     const result = await popularSearch.find().sort({ quantity: -1 }).limit(6);
     res.json(result);
 };
 
-export const addPopularSearch = async (req, res, next) => {
+export const addPopularSearch = async (req, res) => {
     const body = req.body;
     await popularSearch.findOneAndUpdate({ name: body.name }, { $inc: { quantity: 1 } }, { upsert: true, new: true });
     res.json();
