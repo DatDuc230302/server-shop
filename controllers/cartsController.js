@@ -42,12 +42,92 @@ export const updateProductsCarts = async (req, res) => {
             if (keyProduct) {
                 await carts.updateOne(
                     { idUser },
-                    { $push: { products: { idProduct: idProduct, key: keyProduct, odreredAt: new Date() } } },
+                    {
+                        $push: {
+                            products: {
+                                $each: [{ idProduct: idProduct, key: keyProduct, odreredAt: new Date() }],
+                                $position: 0,
+                            },
+                        },
+                    },
                 );
                 res.status(200).json({ message: 'successfully' });
             } else {
                 res.status(200).json({ message: 'fail' });
             }
+        }
+    } catch {
+        console.log('Error');
+    }
+};
+
+export const updateChangeProductsCarts = async (req, res) => {
+    try {
+        const { idUser, idProduct } = req.body;
+        const quantity = Number(req.body.quantity) <= 0 ? 1 : Number(req.body.quantity);
+        const getKeysProduct = await products.findOne({ _id: idProduct }, { keys: 1 });
+        const keysProduct = getKeysProduct.keys.slice(0, quantity);
+        // Sau khi lấy ra quantity cần lấy thì sẽ update lại keys của product hiện tại
+        await products.findOneAndUpdate(
+            {
+                _id: idProduct,
+            },
+            { $pull: { keys: { $in: keysProduct } } },
+        );
+
+        // oldKeysArr
+        const oldKeysArr = await carts.findOne({ idUser: idUser });
+
+        // Pull toàn bộ key cũ ra khỏi carts
+        const pullArr = await carts.findOneAndUpdate(
+            { idUser: idUser },
+            { $pull: { products: { idProduct: idProduct } } },
+            { new: true },
+        );
+
+        // Mảng mới sau khi đã pull hết tất cả idproduct cũ
+        const arr = pullArr.products;
+
+        // Tạo một mảng mới gồm gồm các object có idPorduct và key
+        let newKeysArr = [];
+        keysProduct.forEach((item) => {
+            newKeysArr.push({ idProduct: idProduct, key: item, odreredAt: new Date() });
+        });
+
+        // Mảng cuối cùng
+        const finalKeysArr = newKeysArr.concat(arr);
+
+        if (finalKeysArr.length <= 15) {
+            // Thay thế mảng keys cũ bằng mảng keys mới trong tài liệu carts
+            await carts.findOneAndUpdate({ idUser: idUser }, { $set: { products: finalKeysArr } }, { new: true });
+        } else {
+            await carts.findOneAndUpdate(
+                { idUser: idUser },
+                { $set: { products: oldKeysArr.products } },
+                { new: true },
+            );
+
+            await products.findOneAndUpdate(
+                {
+                    _id: idProduct,
+                },
+                { $push: { keys: { $each: keysProduct } } },
+            );
+
+            return res.status(200).json({
+                message: 'Cart is full',
+            });
+        }
+
+        // Nếu keys trong product >
+        if (keysProduct.length >= quantity) {
+            res.status(200).json({
+                message: 'successfully',
+            });
+        } else {
+            res.status(200).json({
+                message: 'The key is not enough',
+            });
         }
     } catch {
         console.log('Error');

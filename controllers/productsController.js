@@ -526,9 +526,9 @@ export const queryTrending = async (req, res) => {
 
 export const findIdAndUpdateViews = async (req, res) => {
     try {
-        const body = req.body;
-        const result = await products.find({ _id: body.id });
-        // await products.findOneAndUpdate({ _id: body.id }, { $inc: { views: 1 } }, { upsert: true, new: true });
+        const { id } = req.body;
+        const result = await products.find({ _id: id });
+        await products.findOneAndUpdate({ _id: id }, { $inc: { views: 1 } }, { upsert: true, new: true });
         res.status(200).json(result);
     } catch {
         res.json({ status: 404 });
