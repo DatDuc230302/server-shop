@@ -34,6 +34,16 @@ export const checkAdmin = async (req, res, next) => {
     }
 };
 
+export const checkMember = async (req, res, next) => {
+    const { id, password } = req.query;
+    const data = await users.find({ $and: [{ id: id }, { password: password }] });
+    if (data.length > 0) {
+        res.json({ message: 'successfully' });
+    } else {
+        res.json({ message: 'fail' });
+    }
+};
+
 export const updateAvatar = async (req, res, next) => {
     const body = req.body;
     await users.findOneAndUpdate(

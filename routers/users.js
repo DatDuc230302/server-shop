@@ -1,5 +1,13 @@
 import express from 'express';
-import { addUsers, queryId, getAvatars, getUsers, updateAvatar, checkAdmin } from '../controllers/usersController.js';
+import {
+    addUsers,
+    queryId,
+    getAvatars,
+    getUsers,
+    updateAvatar,
+    checkAdmin,
+    checkMember,
+} from '../controllers/usersController.js';
 
 const usersRouter = express.Router();
 
@@ -9,6 +17,7 @@ usersRouter.get('/users/queryId', queryId);
 usersRouter.post('/users/updateAvatar', updateAvatar);
 
 usersRouter.get('/users/checkAdmin', checkAdmin);
+usersRouter.get('/users/checkMember', checkMember);
 
 //
 
