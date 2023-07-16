@@ -26,7 +26,8 @@ export const queryId = async (req, res, next) => {
 
 export const checkAdmin = async (req, res, next) => {
     const uid = req.query.uid;
-    const data = await users.find({ $and: [{ id: uid }, { rule: 0 }] });
+    const password = req.query.password;
+    const data = await users.find({ $and: [{ id: uid }, { password: password }, { rule: 0 }] });
     if (data.length > 0) {
         res.json({ status: true });
     } else {
