@@ -38,7 +38,7 @@ export const checkMember = async (req, res, next) => {
     const { id, password } = req.query;
     const data = await users.find({ $and: [{ id: id }, { password: password }] });
     if (data.length > 0) {
-        res.json({ message: 'successfully' });
+        res.json({ result: data, message: 'successfully' });
     } else {
         res.json({ message: 'fail' });
     }

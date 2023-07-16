@@ -6,6 +6,7 @@ const schema = new mongoose.Schema(
         password: String,
         name: String,
         avatar: String,
+        defaultAvatar: String,
         rule: Number,
     },
     { timestamps: true },
