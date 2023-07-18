@@ -20,7 +20,7 @@ export const getOrders = async (req, res) => {
         const { userId } = req.query;
 
         if (userId) {
-            const result = await orders.findOne({ userId: userId });
+            const result = await orders.findOne({ userId: userId, status: 0 });
             res.status(200).json({
                 result: result,
                 message: 'successfully',
@@ -44,7 +44,7 @@ export const addOrders = async (req, res) => {
 
         let result;
         if (getOrder) {
-            if (getOrder.status === 2) {
+            if (getOrder.status === 1) {
                 result = await orders({
                     userId: infoUser.id,
                     userName: infoUser.name,
@@ -72,6 +72,23 @@ export const addOrders = async (req, res) => {
             });
             result.save();
         }
+
+        res.status(200).json({
+            message: 'successfully',
+        });
+    } catch {
+        console.log('Error');
+    }
+};
+
+export const updateStatus = async (req, res) => {
+    try {
+        const { userId } = req.body;
+        await orders.findOneAndUpdate(
+            { status: 0, userId: userId }, // Điều kiện tìm kiếm
+            { $set: { status: 1 } }, // Các trường muốn cập nhật
+            { new: true }, // Tùy chọn này để trả về bản ghi sau khi đã cập nhật
+        );
 
         res.status(200).json({
             message: 'successfully',

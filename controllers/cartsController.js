@@ -156,3 +156,13 @@ export const deleteAllByIdProducts = async (req, res) => {
         console.log('Error');
     }
 };
+
+export const deleteCart = async (req, res) => {
+    try {
+        const { idUser } = req.body;
+        await carts.findOneAndUpdate({ idUser: idUser }, { $set: { products: [] } });
+        res.status(200).json({ message: 'successfully' });
+    } catch {
+        console.log('Error');
+    }
+};

@@ -3,6 +3,7 @@ import {
     addCarts,
     checkIdUser,
     deleteAllByIdProducts,
+    deleteCart,
     getCarts,
     updateChangeProductsCarts,
     updateProductsCarts,
@@ -16,5 +17,6 @@ cartsRouter.post('/carts/updateProductsCarts', updateProductsCarts);
 cartsRouter.get('/carts/getCarts', checkIdUser, getCarts);
 cartsRouter.post('/carts/deleteAllByIdProducts', checkIdProduct, deleteAllByIdProducts);
 cartsRouter.post('/carts/updateChangeProductsCarts', updateChangeProductsCarts);
+cartsRouter.post('/carts/deleteCart', deleteCart);
 
 export default cartsRouter;
