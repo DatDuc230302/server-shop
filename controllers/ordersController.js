@@ -35,6 +35,25 @@ export const getOrders = async (req, res) => {
     }
 };
 
+export const getOrdered = async (req, res) => {
+    try {
+        const { userId } = req.query;
+        if (userId) {
+            const result = await orders.find({ userId: userId, status: 1 });
+            res.status(200).json({
+                result: result,
+                message: 'successfully',
+            });
+        } else {
+            res.status(500).jon({
+                message: 'fail',
+            });
+        }
+    } catch {
+        console.log('Error');
+    }
+};
+
 export const addOrders = async (req, res) => {
     try {
         const { userId, productsFromCarts, totalPrice } = req.body;

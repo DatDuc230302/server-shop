@@ -34,7 +34,7 @@ export const addCarts = async (req, res) => {
 
 export const updateProductsCarts = async (req, res) => {
     try {
-        const { idUser, idProduct } = req.body;
+        const { idUser, idProduct, nameProduct } = req.body;
         if (idUser && idProduct) {
             const getKeyFromProduct = await products.findOne({ _id: idProduct }, { keys: 1 });
             getKeyFromProduct.save();
@@ -45,7 +45,14 @@ export const updateProductsCarts = async (req, res) => {
                     {
                         $push: {
                             products: {
-                                $each: [{ idProduct: idProduct, key: keyProduct, odreredAt: new Date() }],
+                                $each: [
+                                    {
+                                        idProduct: idProduct,
+                                        key: keyProduct,
+                                        nameProduct: nameProduct,
+                                        orderedAt: new Date(),
+                                    },
+                                ],
                                 $position: 0,
                             },
                         },
@@ -63,7 +70,7 @@ export const updateProductsCarts = async (req, res) => {
 
 export const updateChangeProductsCarts = async (req, res) => {
     try {
-        const { idUser, idProduct } = req.body;
+        const { idUser, idProduct, nameProduct } = req.body;
         const quantity = Number(req.body.quantity) <= 0 ? 1 : Number(req.body.quantity);
         const getKeysProduct = await products.findOne({ _id: idProduct }, { keys: 1 });
         const keysProduct = getKeysProduct.keys.slice(0, quantity);
@@ -91,7 +98,7 @@ export const updateChangeProductsCarts = async (req, res) => {
         // Tạo một mảng mới gồm gồm các object có idPorduct và key
         let newKeysArr = [];
         keysProduct.forEach((item) => {
-            newKeysArr.push({ idProduct: idProduct, key: item, odreredAt: new Date() });
+            newKeysArr.push({ idProduct: idProduct, key: item, nameProduct: nameProduct, orderedAt: new Date() });
         });
 
         // Mảng cuối cùng
